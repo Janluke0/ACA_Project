@@ -1282,6 +1282,7 @@ public:
 		int start, j;
 		if((start = cache->get_data(i,&data,len)) < len)
 		{
+			#pragma omp parallel for private(j)
 			for(j=start;j<len;j++)
 				data[j] = (Qfloat)(y[i]*y[j]*(this->*kernel_function)(i,j));
 		}
@@ -1331,6 +1332,7 @@ public:
 		int start, j;
 		if((start = cache->get_data(i,&data,len)) < len)
 		{
+			#pragma omp parallel for private(j)
 			for(j=start;j<len;j++)
 				data[j] = (Qfloat)(this->*kernel_function)(i,j);
 		}
@@ -2507,6 +2509,7 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 	{
 		double *sv_coef = model->sv_coef[0];
 		double sum = 0;
+		#pragma omp parallel for private(i)
 		for(i=0;i<model->l;i++)
 			sum += sv_coef[i] * Kernel::k_function(x,model->SV[i],model->param);
 		sum -= model->rho[0];
