@@ -1,2 +1,6 @@
 *.o
 data*
+*.out
+svm-predict
+svm-scale
+svm-train

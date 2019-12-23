@@ -1,0 +1,291 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+ no time accumulated
+
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  Ts/call  Ts/call  name    
+  0.00      0.00     0.00 10164000     0.00     0.00  Kernel::dot(svm_node const*, svm_node const*)
+  0.00      0.00     0.00 10158000     0.00     0.00  Kernel::kernel_rbf(int, int) const
+  0.00      0.00     0.00    12001     0.00     0.00  readline(_IO_FILE*)
+  0.00      0.00     0.00     8555     0.00     0.00  Cache::lru_insert(Cache::head_t*)
+  0.00      0.00     0.00     7892     0.00     0.00  Cache::get_data(int, float**, int)
+  0.00      0.00     0.00     7892     0.00     0.00  SVC_Q::get_Q(int, int) const
+  0.00      0.00     0.00     6863     0.00     0.00  Cache::lru_delete(Cache::head_t*)
+  0.00      0.00     0.00     6000     0.00     0.00  Solver::be_shrunk(int, double, double)
+  0.00      0.00     0.00     1940     0.00     0.00  Solver::select_working_set(int&, int&)
+  0.00      0.00     0.00      683     0.00     0.00  Cache::swap_index(int, int)
+  0.00      0.00     0.00      683     0.00     0.00  Solver::swap_index(int, int)
+  0.00      0.00     0.00      683     0.00     0.00  SVC_Q::swap_index(int, int) const
+  0.00      0.00     0.00        7     0.00     0.00  print_string_stdout(char const*)
+  0.00      0.00     0.00        7     0.00     0.00  info(char const*, ...)
+  0.00      0.00     0.00        1     0.00     0.00  svm_train_one(svm_problem const*, svm_parameter const*, double, double)
+  0.00      0.00     0.00        1     0.00     0.00  readline(_IO_FILE*)
+  0.00      0.00     0.00        1     0.00     0.00  Cache::Cache(int, long)
+  0.00      0.00     0.00        1     0.00     0.00  Cache::~Cache()
+  0.00      0.00     0.00        1     0.00     0.00  Kernel::Kernel(int, svm_node* const*, svm_parameter const&)
+  0.00      0.00     0.00        1     0.00     0.00  Kernel::~Kernel()
+  0.00      0.00     0.00        1     0.00     0.00  Solver::do_shrinking()
+  0.00      0.00     0.00        1     0.00     0.00  Solver::calculate_rho()
+  0.00      0.00     0.00        1     0.00     0.00  Solver::reconstruct_gradient()
+  0.00      0.00     0.00        1     0.00     0.00  Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int)
+  0.00      0.00     0.00        1     0.00     0.00  SVC_Q::get_QD() const
+  0.00      0.00     0.00        1     0.00     0.00  svm_free_model_content
+  0.00      0.00     0.00        1     0.00     0.00  svm_set_print_string_function
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) no time propagated
+
+index % time    self  children    called     name
+                0.00    0.00       1/1           svm_free_and_destroy_model [14]
+[1]      0.0    0.00    0.00       1         svm_free_model_content [1]
+-----------------------------------------------
+                0.00    0.00       1/1           parse_command_line(int, char**, char*, char*) [57]
+[2]      0.0    0.00    0.00       1         svm_set_print_string_function [2]
+-----------------------------------------------
+                0.00    0.00    6000/10164000     Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [45]
+                0.00    0.00 10158000/10164000     Kernel::kernel_rbf(int, int) const [28]
+[27]     0.0    0.00    0.00 10164000         Kernel::dot(svm_node const*, svm_node const*) [27]
+-----------------------------------------------
+                0.00    0.00    6000/10158000     svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
+                0.00    0.00 10152000/10158000     Solver_NU::~Solver_NU() [73]
+[28]     0.0    0.00    0.00 10158000         Kernel::kernel_rbf(int, int) const [28]
+                0.00    0.00 10158000/10164000     Kernel::dot(svm_node const*, svm_node const*) [27]
+-----------------------------------------------
+                0.00    0.00   12001/12001       read_problem(char const*) [53]
+[29]     0.0    0.00    0.00   12001         readline(_IO_FILE*) [29]
+-----------------------------------------------
+                0.00    0.00     663/8555        Cache::swap_index(int, int) [36]
+                0.00    0.00    7892/8555        Cache::get_data(int, float**, int) [31]
+[30]     0.0    0.00    0.00    8555         Cache::lru_insert(Cache::head_t*) [30]
+-----------------------------------------------
+                0.00    0.00    7892/7892        SVC_Q::get_Q(int, int) const [32]
+[31]     0.0    0.00    0.00    7892         Cache::get_data(int, float**, int) [31]
+                0.00    0.00    7892/8555        Cache::lru_insert(Cache::head_t*) [30]
+                0.00    0.00    6200/6863        Cache::lru_delete(Cache::head_t*) [33]
+-----------------------------------------------
+                0.00    0.00     636/7892        Solver::reconstruct_gradient() [49]
+                0.00    0.00    1940/7892        Solver::select_working_set(int&, int&) [35]
+                0.00    0.00    5316/7892        Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
+[32]     0.0    0.00    0.00    7892         SVC_Q::get_Q(int, int) const [32]
+                0.00    0.00    7892/7892        Cache::get_data(int, float**, int) [31]
+-----------------------------------------------
+                0.00    0.00     663/6863        Cache::swap_index(int, int) [36]
+                0.00    0.00    6200/6863        Cache::get_data(int, float**, int) [31]
+[33]     0.0    0.00    0.00    6863         Cache::lru_delete(Cache::head_t*) [33]
+-----------------------------------------------
+                0.00    0.00    6000/6000        Solver::do_shrinking() [47]
+[34]     0.0    0.00    0.00    6000         Solver::be_shrunk(int, double, double) [34]
+-----------------------------------------------
+                0.00    0.00    1940/1940        Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
+[35]     0.0    0.00    0.00    1940         Solver::select_working_set(int&, int&) [35]
+                0.00    0.00    1940/7892        SVC_Q::get_Q(int, int) const [32]
+-----------------------------------------------
+                0.00    0.00     683/683         SVC_Q::swap_index(int, int) const [38]
+[36]     0.0    0.00    0.00     683         Cache::swap_index(int, int) [36]
+                0.00    0.00     663/8555        Cache::lru_insert(Cache::head_t*) [30]
+                0.00    0.00     663/6863        Cache::lru_delete(Cache::head_t*) [33]
+-----------------------------------------------
+                0.00    0.00     683/683         Solver::do_shrinking() [47]
+[37]     0.0    0.00    0.00     683         Solver::swap_index(int, int) [37]
+                0.00    0.00     683/683         SVC_Q::swap_index(int, int) const [38]
+-----------------------------------------------
+                0.00    0.00     683/683         Solver::swap_index(int, int) [37]
+[38]     0.0    0.00    0.00     683         SVC_Q::swap_index(int, int) const [38]
+                0.00    0.00     683/683         Cache::swap_index(int, int) [36]
+-----------------------------------------------
+                0.00    0.00       7/7           info(char const*, ...) [40]
+[39]     0.0    0.00    0.00       7         print_string_stdout(char const*) [39]
+-----------------------------------------------
+                0.00    0.00       1/7           svm_train [26]
+                0.00    0.00       3/7           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
+                0.00    0.00       3/7           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
+[40]     0.0    0.00    0.00       7         info(char const*, ...) [40]
+                0.00    0.00       7/7           print_string_stdout(char const*) [39]
+-----------------------------------------------
+                0.00    0.00       1/1           svm_train [26]
+[41]     0.0    0.00    0.00       1         svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
+                0.00    0.00    6000/10158000     Kernel::kernel_rbf(int, int) const [28]
+                0.00    0.00       3/7           info(char const*, ...) [40]
+                0.00    0.00       1/1           Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [45]
+                0.00    0.00       1/1           Cache::Cache(int, long) [43]
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
+                0.00    0.00       1/1           Cache::~Cache() [44]
+                0.00    0.00       1/1           Kernel::~Kernel() [46]
+-----------------------------------------------
+                0.00    0.00       1/1           svm_train [26]
+[42]     0.0    0.00    0.00       1         readline(_IO_FILE*) [42]
+-----------------------------------------------
+                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
+[43]     0.0    0.00    0.00       1         Cache::Cache(int, long) [43]
+-----------------------------------------------
+                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
+[44]     0.0    0.00    0.00       1         Cache::~Cache() [44]
+-----------------------------------------------
+                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
+[45]     0.0    0.00    0.00       1         Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [45]
+                0.00    0.00    6000/10164000     Kernel::dot(svm_node const*, svm_node const*) [27]
+-----------------------------------------------
+                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
+[46]     0.0    0.00    0.00       1         Kernel::~Kernel() [46]
+-----------------------------------------------
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
+[47]     0.0    0.00    0.00       1         Solver::do_shrinking() [47]
+                0.00    0.00    6000/6000        Solver::be_shrunk(int, double, double) [34]
+                0.00    0.00     683/683         Solver::swap_index(int, int) [37]
+-----------------------------------------------
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
+[48]     0.0    0.00    0.00       1         Solver::calculate_rho() [48]
+-----------------------------------------------
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
+[49]     0.0    0.00    0.00       1         Solver::reconstruct_gradient() [49]
+                0.00    0.00     636/7892        SVC_Q::get_Q(int, int) const [32]
+-----------------------------------------------
+                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
+[50]     0.0    0.00    0.00       1         Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
+                0.00    0.00    5316/7892        SVC_Q::get_Q(int, int) const [32]
+                0.00    0.00    1940/1940        Solver::select_working_set(int&, int&) [35]
+                0.00    0.00       3/7           info(char const*, ...) [40]
+                0.00    0.00       1/1           SVC_Q::get_QD() const [51]
+                0.00    0.00       1/1           Solver::do_shrinking() [47]
+                0.00    0.00       1/1           Solver::calculate_rho() [48]
+                0.00    0.00       1/1           Solver::reconstruct_gradient() [49]
+-----------------------------------------------
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
+[51]     0.0    0.00    0.00       1         SVC_Q::get_QD() const [51]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [41] svm_train_one(svm_problem const*, svm_parameter const*, double, double) (svm.cpp) [43] Cache::Cache(int, long) [49] Solver::reconstruct_gradient()
+  [39] print_string_stdout(char const*) (svm.cpp) [44] Cache::~Cache() [50] Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int)
+  [40] info(char const*, ...) (svm.cpp) [27] Kernel::dot(svm_node const*, svm_node const*) [34] Solver::be_shrunk(int, double, double)
+  [29] readline(_IO_FILE*) (svm-train.c) [45] Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [38] SVC_Q::swap_index(int, int) const
+  [42] readline(_IO_FILE*) (svm.cpp) [46] Kernel::~Kernel() [32] SVC_Q::get_Q(int, int) const
+  [33] Cache::lru_delete(Cache::head_t*) [37] Solver::swap_index(int, int) [51] SVC_Q::get_QD() const
+  [30] Cache::lru_insert(Cache::head_t*) [47] Solver::do_shrinking() [28] Kernel::kernel_rbf(int, int) const
+  [36] Cache::swap_index(int, int) [48] Solver::calculate_rho() [1] svm_free_model_content
+  [31] Cache::get_data(int, float**, int) [35] Solver::select_working_set(int&, int&) [2] svm_set_print_string_function
