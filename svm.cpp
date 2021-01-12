@@ -821,8 +821,8 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	const Qfloat *Q_i = NULL;
 	if(i != -1) // NULL Q_i not accessed: Gmax=-INF if i=-1
 		Q_i = Q->get_Q(i,active_size);
-
-	for(int j=0;j<active_size;j++)
+	
+    for(int j=0;j<active_size;j++)
 	{
 		if(y[j]==+1)
 		{
@@ -1272,6 +1272,7 @@ public:
 		clone(y,y_,prob.l);
 		cache = new Cache(prob.l,(long int)(param.cache_size*(1<<20)));
 		QD = new double[prob.l];
+        #pragma omp parallel for 
 		for(int i=0;i<prob.l;i++)
 			QD[i] = (this->*kernel_function)(i,i);
 	}
@@ -1322,6 +1323,7 @@ public:
 	{
 		cache = new Cache(prob.l,(long int)(param.cache_size*(1<<20)));
 		QD = new double[prob.l];
+        #pragma omp parallel for 
 		for(int i=0;i<prob.l;i++)
 			QD[i] = (this->*kernel_function)(i,i);
 	}
@@ -1399,7 +1401,7 @@ public:
 		int j, real_i = index[i];
 		if(cache->get_data(real_i,&data,l) < l)
 		{
-			for(j=0;j<l;j++)
+            for(j=0;j<l;j++)
 				data[j] = (Qfloat)(this->*kernel_function)(real_i,j);
 		}
 
@@ -1461,7 +1463,8 @@ static void solve_c_svc(
 		alpha, Cp, Cn, param->eps, si, param->shrinking);
 
 	double sum_alpha=0;
-	for(i=0;i<l;i++)
+    #pragma omp parallel for reduction(+: sum_alpha)
+    for(i=0;i<l;i++)
 		sum_alpha += alpha[i];
 
 	if (Cp==Cn)
