@@ -1,6 +1,6 @@
-CXX ?= g++
 DBG = -ggdb -pg
-CFLAGS = $(DBG) -fopenmp -Wall -Wconversion -O3 -fPIC
+CXX ?= g++ $(DBG)
+CFLAGS = $(DBG) -fopenmp -Wall -Wconversion -O0 -fPIC
 SHVER = 2
 OS = $(shell uname)
 

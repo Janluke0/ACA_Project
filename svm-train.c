@@ -109,7 +109,7 @@ int main(int argc, char **argv)
     start = omp_get_wtime(); 
 	model = svm_train(&prob,&param);
 	end = omp_get_wtime(); 
-    printf("Work took %f seconds, with %d threads.\n", end - start, omp_get_num_threads());
+    printf("Work took %f seconds, with %d threads.\n", end - start, omp_get_max_threads());
 	if(svm_save_model(model_file_name,model))
 		{
 			fprintf(stderr, "can't save model to file %s\n", model_file_name);
