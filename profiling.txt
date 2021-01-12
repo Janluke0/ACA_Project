@@ -1,37 +1,60 @@
 Flat profile:
 
 Each sample counts as 0.01 seconds.
- no time accumulated
-
   %   cumulative   self              self     total           
- time   seconds   seconds    calls  Ts/call  Ts/call  name    
-  0.00      0.00     0.00 10164000     0.00     0.00  Kernel::dot(svm_node const*, svm_node const*)
-  0.00      0.00     0.00 10158000     0.00     0.00  Kernel::kernel_rbf(int, int) const
-  0.00      0.00     0.00    12001     0.00     0.00  readline(_IO_FILE*)
-  0.00      0.00     0.00     8555     0.00     0.00  Cache::lru_insert(Cache::head_t*)
-  0.00      0.00     0.00     7892     0.00     0.00  Cache::get_data(int, float**, int)
-  0.00      0.00     0.00     7892     0.00     0.00  SVC_Q::get_Q(int, int) const
-  0.00      0.00     0.00     6863     0.00     0.00  Cache::lru_delete(Cache::head_t*)
-  0.00      0.00     0.00     6000     0.00     0.00  Solver::be_shrunk(int, double, double)
-  0.00      0.00     0.00     1940     0.00     0.00  Solver::select_working_set(int&, int&)
-  0.00      0.00     0.00      683     0.00     0.00  Cache::swap_index(int, int)
-  0.00      0.00     0.00      683     0.00     0.00  Solver::swap_index(int, int)
-  0.00      0.00     0.00      683     0.00     0.00  SVC_Q::swap_index(int, int) const
-  0.00      0.00     0.00        7     0.00     0.00  print_string_stdout(char const*)
-  0.00      0.00     0.00        7     0.00     0.00  info(char const*, ...)
-  0.00      0.00     0.00        1     0.00     0.00  svm_train_one(svm_problem const*, svm_parameter const*, double, double)
-  0.00      0.00     0.00        1     0.00     0.00  readline(_IO_FILE*)
-  0.00      0.00     0.00        1     0.00     0.00  Cache::Cache(int, long)
-  0.00      0.00     0.00        1     0.00     0.00  Cache::~Cache()
-  0.00      0.00     0.00        1     0.00     0.00  Kernel::Kernel(int, svm_node* const*, svm_parameter const&)
-  0.00      0.00     0.00        1     0.00     0.00  Kernel::~Kernel()
-  0.00      0.00     0.00        1     0.00     0.00  Solver::do_shrinking()
-  0.00      0.00     0.00        1     0.00     0.00  Solver::calculate_rho()
-  0.00      0.00     0.00        1     0.00     0.00  Solver::reconstruct_gradient()
-  0.00      0.00     0.00        1     0.00     0.00  Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int)
-  0.00      0.00     0.00        1     0.00     0.00  SVC_Q::get_QD() const
-  0.00      0.00     0.00        1     0.00     0.00  svm_free_model_content
-  0.00      0.00     0.00        1     0.00     0.00  svm_set_print_string_function
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 81.19     32.84    32.84 68356868     0.00     0.00  Kernel::dot(svm_node const*, svm_node const*)
+  5.44     35.04     2.20     8257     0.00     0.00  Solver::select_working_set(int&, int&)
+  5.27     37.17     2.13 66081928     0.00     0.00  Kernel::kernel_rbf(int, int) const
+  3.86     38.73     1.56        1     1.56    40.32  Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int)
+  2.23     39.63     0.90    24662     0.00     0.00  double max<double>(double, double)
+  0.84     39.97     0.34 268921758     0.00     0.00  Solver::is_upper_bound(int)
+  0.82     40.30     0.33 268909462     0.00     0.00  Solver::is_lower_bound(int)
+  0.22     40.39     0.09                             Kernel::~Kernel()
+  0.05     40.41     0.02    49071     0.00     0.00  Solver::update_alpha_status(int)
+  0.05     40.43     0.02                             Kernel::swap_index(int, int) const
+  0.02     40.44     0.01    39014     0.00     0.00  Cache::lru_insert(Cache::head_t*)
+  0.02     40.45     0.01        1     0.01     0.01  svm_group_classes(svm_problem const*, int*, int**, int**, int**, int*)
+  0.00     40.45     0.00    65581     0.00     0.00  Solver::get_C(int)
+  0.00     40.45     0.00    65123     0.00     0.00  readline(_IO_FILE*)
+  0.00     40.45     0.00    39014     0.00     0.00  Cache::get_data(int, float**, int)
+  0.00     40.45     0.00    39014     0.00     0.00  SVC_Q::get_Q(int, int) const
+  0.00     40.45     0.00    38217     0.00     0.00  Cache::lru_delete(Cache::head_t*)
+  0.00     40.45     0.00    14312     0.00     0.00  void swap<int>(int&, int&)
+  0.00     40.45     0.00     7786     0.00     0.00  double min<double>(double, double)
+  0.00     40.45     0.00       14     0.00     0.00  print_string_stdout(char const*)
+  0.00     40.45     0.00       14     0.00     0.00  info(char const*, ...)
+  0.00     40.45     0.00        9     0.00     0.00  int min<int>(int, int)
+  0.00     40.45     0.00        2     0.00     0.00  void clone<signed char const, signed char>(signed char*&, signed char const*, int)
+  0.00     40.45     0.00        1     0.00     0.00  read_problem(char const*)
+  0.00     40.45     0.00        1     0.00     0.00  parse_command_line(int, char**, char*, char*)
+  0.00     40.45     0.00        1     0.00     0.00  int max<int>(int, int)
+  0.00     40.45     0.00        1     0.00     0.00  long max<long>(long, long)
+  0.00     40.45     0.00        1     0.00     0.00  void clone<svm_node* const, svm_node const*>(svm_node const**&, svm_node* const*, int)
+  0.00     40.45     0.00        1     0.00     0.00  void clone<double const, double>(double*&, double const*, int)
+  0.00     40.45     0.00        1     0.00     0.00  void clone<double, double>(double*&, double*, int)
+  0.00     40.45     0.00        1     0.00    40.33  solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double)
+  0.00     40.45     0.00        1     0.00    40.33  svm_train_one(svm_problem const*, svm_parameter const*, double, double)
+  0.00     40.45     0.00        1     0.00     0.00  Cache::Cache(int, long)
+  0.00     40.45     0.00        1     0.00     0.00  Cache::~Cache()
+  0.00     40.45     0.00        1     0.00     0.02  SVC_Q::SVC_Q(svm_problem const&, svm_parameter const&, signed char const*)
+  0.00     40.45     0.00        1     0.00     0.00  SVC_Q::~SVC_Q()
+  0.00     40.45     0.00        1     0.00     0.02  Kernel::Kernel(int, svm_node* const*, svm_parameter const&)
+  0.00     40.45     0.00        1     0.00     0.00  Kernel::~Kernel()
+  0.00     40.45     0.00        1     0.00    35.86  Solver::calculate_rho()
+  0.00     40.45     0.00        1     0.00     0.00  Solver::reconstruct_gradient()
+  0.00     40.45     0.00        1     0.00     0.00  Solver::Solver()
+  0.00     40.45     0.00        1     0.00     0.00  Solver::~Solver()
+  0.00     40.45     0.00        1     0.00     0.00  QMatrix::QMatrix()
+  0.00     40.45     0.00        1     0.00     0.00  QMatrix::~QMatrix()
+  0.00     40.45     0.00        1     0.00     0.00  SVC_Q::get_QD() const
+  0.00     40.45     0.00        1     0.00     0.00  svm_check_parameter
+  0.00     40.45     0.00        1     0.00     0.00  svm_destroy_param
+  0.00     40.45     0.00        1     0.00     0.00  svm_free_and_destroy_model
+  0.00     40.45     0.00        1     0.00     0.00  svm_free_model_content
+  0.00     40.45     0.00        1     0.00     0.00  svm_save_model
+  0.00     40.45     0.00        1     0.00     0.00  svm_set_print_string_function
+  0.00     40.45     0.00        1     0.00    40.34  svm_train
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -69,125 +92,241 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 2 byte(s) no time propagated
+granularity: each sample hit covers 2 byte(s) for 0.02% of 40.45 seconds
 
 index % time    self  children    called     name
-                0.00    0.00       1/1           svm_free_and_destroy_model [14]
-[1]      0.0    0.00    0.00       1         svm_free_model_content [1]
+                0.00   40.34       1/1           main [2]
+[1]     99.7    0.00   40.34       1         svm_train [1]
+                0.00   40.33       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [4]
+                0.01    0.00       1/1           svm_group_classes(svm_problem const*, int*, int**, int**, int**, int*) [21]
+                0.00    0.00       1/14          info(char const*, ...) [52]
 -----------------------------------------------
-                0.00    0.00       1/1           parse_command_line(int, char**, char*, char*) [57]
-[2]      0.0    0.00    0.00       1         svm_set_print_string_function [2]
+                                                 <spontaneous>
+[2]     99.7    0.00   40.34                 main [2]
+                0.00   40.34       1/1           svm_train [1]
+                0.00    0.00       1/1           parse_command_line(int, char**, char*, char*) [56]
+                0.00    0.00       1/1           read_problem(char const*) [55]
+                0.00    0.00       1/1           svm_check_parameter [22]
+                0.00    0.00       1/1           svm_save_model [26]
+                0.00    0.00       1/1           svm_free_and_destroy_model [24]
+                0.00    0.00       1/1           svm_destroy_param [23]
 -----------------------------------------------
-                0.00    0.00    6000/10164000     Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [45]
-                0.00    0.00 10158000/10164000     Kernel::kernel_rbf(int, int) const [28]
-[27]     0.0    0.00    0.00 10164000         Kernel::dot(svm_node const*, svm_node const*) [27]
+                0.00   40.33       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [4]
+[3]     99.7    0.00   40.33       1         solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double) [3]
+                1.56   38.76       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+                0.00    0.02       1/1           SVC_Q::SVC_Q(svm_problem const&, svm_parameter const&, signed char const*) [16]
+                0.00    0.00       1/1           Solver::Solver() [67]
+                0.00    0.00       1/1           SVC_Q::~SVC_Q() [64]
+                0.00    0.00       1/14          info(char const*, ...) [52]
+                0.00    0.00       1/1           Solver::~Solver() [68]
 -----------------------------------------------
-                0.00    0.00    6000/10158000     svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
-                0.00    0.00 10152000/10158000     Solver_NU::~Solver_NU() [73]
-[28]     0.0    0.00    0.00 10158000         Kernel::kernel_rbf(int, int) const [28]
-                0.00    0.00 10158000/10164000     Kernel::dot(svm_node const*, svm_node const*) [27]
+                0.00   40.33       1/1           svm_train [1]
+[4]     99.7    0.00   40.33       1         svm_train_one(svm_problem const*, svm_parameter const*, double, double) [4]
+                0.00   40.33       1/1           solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double) [3]
+                0.00    0.00       2/14          info(char const*, ...) [52]
 -----------------------------------------------
-                0.00    0.00   12001/12001       read_problem(char const*) [53]
-[29]     0.0    0.00    0.00   12001         readline(_IO_FILE*) [29]
+                1.56   38.76       1/1           solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double) [3]
+[5]     99.7    1.56   38.76       1         Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+                0.00   35.86       1/1           Solver::calculate_rho() [6]
+                2.20    0.67    8257/8257        Solver::select_working_set(int&, int&) [10]
+                0.02    0.00   49071/49071       Solver::update_alpha_status(int) [14]
+                0.00    0.01   30757/39014       SVC_Q::get_Q(int, int) const [20]
+                0.00    0.00   33020/268921758     Solver::is_upper_bound(int) [11]
+                0.00    0.00   32561/268909462     Solver::is_lower_bound(int) [12]
+                0.00    0.00   16510/65581       Solver::get_C(int) [46]
+                0.00    0.00      10/14          info(char const*, ...) [52]
+                0.00    0.00       9/9           int min<int>(int, int) [53]
+                0.00    0.00       1/1           SVC_Q::get_QD() const [71]
+                0.00    0.00       1/1           void clone<double const, double>(double*&, double const*, int) [60]
+                0.00    0.00       1/2           void clone<signed char const, signed char>(signed char*&, signed char const*, int) [54]
+                0.00    0.00       1/1           void clone<double, double>(double*&, double*, int) [61]
+                0.00    0.00       1/1           int max<int>(int, int) [57]
+                0.00    0.00       1/1           Solver::reconstruct_gradient() [66]
 -----------------------------------------------
-                0.00    0.00     663/8555        Cache::swap_index(int, int) [36]
-                0.00    0.00    7892/8555        Cache::get_data(int, float**, int) [31]
-[30]     0.0    0.00    0.00    8555         Cache::lru_insert(Cache::head_t*) [30]
+                0.00   35.86       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[6]     88.6    0.00   35.86       1         Solver::calculate_rho() [6]
+                0.90   34.96   24662/24662       double max<double>(double, double) [7]
+                0.00    0.00   32561/268921758     Solver::is_upper_bound(int) [11]
+                0.00    0.00   20724/268909462     Solver::is_lower_bound(int) [12]
+                0.00    0.00    7786/7786        double min<double>(double, double) [50]
 -----------------------------------------------
-                0.00    0.00    7892/7892        SVC_Q::get_Q(int, int) const [32]
-[31]     0.0    0.00    0.00    7892         Cache::get_data(int, float**, int) [31]
-                0.00    0.00    7892/8555        Cache::lru_insert(Cache::head_t*) [30]
-                0.00    0.00    6200/6863        Cache::lru_delete(Cache::head_t*) [33]
+                0.90   34.96   24662/24662       Solver::calculate_rho() [6]
+[7]     88.6    0.90   34.96   24662         double max<double>(double, double) [7]
+                2.13   32.83 66081928/66081928     Kernel::kernel_rbf(int, int) const [8]
 -----------------------------------------------
-                0.00    0.00     636/7892        Solver::reconstruct_gradient() [49]
-                0.00    0.00    1940/7892        Solver::select_working_set(int&, int&) [35]
-                0.00    0.00    5316/7892        Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
-[32]     0.0    0.00    0.00    7892         SVC_Q::get_Q(int, int) const [32]
-                0.00    0.00    7892/7892        Cache::get_data(int, float**, int) [31]
+                2.13   32.83 66081928/66081928     double max<double>(double, double) [7]
+[8]     86.4    2.13   32.83 66081928         Kernel::kernel_rbf(int, int) const [8]
+               32.83    0.00 68324307/68356868     Kernel::dot(svm_node const*, svm_node const*) [9]
 -----------------------------------------------
-                0.00    0.00     663/6863        Cache::swap_index(int, int) [36]
-                0.00    0.00    6200/6863        Cache::get_data(int, float**, int) [31]
-[33]     0.0    0.00    0.00    6863         Cache::lru_delete(Cache::head_t*) [33]
+                0.02    0.00   32561/68356868     Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [17]
+               32.83    0.00 68324307/68356868     Kernel::kernel_rbf(int, int) const [8]
+[9]     81.2   32.84    0.00 68356868         Kernel::dot(svm_node const*, svm_node const*) [9]
 -----------------------------------------------
-                0.00    0.00    6000/6000        Solver::do_shrinking() [47]
-[34]     0.0    0.00    0.00    6000         Solver::be_shrunk(int, double, double) [34]
+                2.20    0.67    8257/8257        Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[10]     7.1    2.20    0.67    8257         Solver::select_working_set(int&, int&) [10]
+                0.34    0.00 268856177/268921758     Solver::is_upper_bound(int) [11]
+                0.33    0.00 268856177/268909462     Solver::is_lower_bound(int) [12]
+                0.00    0.00    8257/39014       SVC_Q::get_Q(int, int) const [20]
 -----------------------------------------------
-                0.00    0.00    1940/1940        Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
-[35]     0.0    0.00    0.00    1940         Solver::select_working_set(int&, int&) [35]
-                0.00    0.00    1940/7892        SVC_Q::get_Q(int, int) const [32]
+                0.00    0.00   32561/268921758     Solver::calculate_rho() [6]
+                0.00    0.00   33020/268921758     Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+                0.34    0.00 268856177/268921758     Solver::select_working_set(int&, int&) [10]
+[11]     0.8    0.34    0.00 268921758         Solver::is_upper_bound(int) [11]
 -----------------------------------------------
-                0.00    0.00     683/683         SVC_Q::swap_index(int, int) const [38]
-[36]     0.0    0.00    0.00     683         Cache::swap_index(int, int) [36]
-                0.00    0.00     663/8555        Cache::lru_insert(Cache::head_t*) [30]
-                0.00    0.00     663/6863        Cache::lru_delete(Cache::head_t*) [33]
+                0.00    0.00   20724/268909462     Solver::calculate_rho() [6]
+                0.00    0.00   32561/268909462     Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+                0.33    0.00 268856177/268909462     Solver::select_working_set(int&, int&) [10]
+[12]     0.8    0.33    0.00 268909462         Solver::is_lower_bound(int) [12]
 -----------------------------------------------
-                0.00    0.00     683/683         Solver::do_shrinking() [47]
-[37]     0.0    0.00    0.00     683         Solver::swap_index(int, int) [37]
-                0.00    0.00     683/683         SVC_Q::swap_index(int, int) const [38]
+                                                 <spontaneous>
+[13]     0.2    0.09    0.00                 Kernel::~Kernel() [13]
 -----------------------------------------------
-                0.00    0.00     683/683         Solver::swap_index(int, int) [37]
-[38]     0.0    0.00    0.00     683         SVC_Q::swap_index(int, int) const [38]
-                0.00    0.00     683/683         Cache::swap_index(int, int) [36]
+                0.02    0.00   49071/49071       Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[14]     0.0    0.02    0.00   49071         Solver::update_alpha_status(int) [14]
+                0.00    0.00   49071/65581       Solver::get_C(int) [46]
 -----------------------------------------------
-                0.00    0.00       7/7           info(char const*, ...) [40]
-[39]     0.0    0.00    0.00       7         print_string_stdout(char const*) [39]
+                                                 <spontaneous>
+[15]     0.0    0.02    0.00                 Kernel::swap_index(int, int) const [15]
 -----------------------------------------------
-                0.00    0.00       1/7           svm_train [26]
-                0.00    0.00       3/7           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
-                0.00    0.00       3/7           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
-[40]     0.0    0.00    0.00       7         info(char const*, ...) [40]
-                0.00    0.00       7/7           print_string_stdout(char const*) [39]
+                0.00    0.02       1/1           solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double) [3]
+[16]     0.0    0.00    0.02       1         SVC_Q::SVC_Q(svm_problem const&, svm_parameter const&, signed char const*) [16]
+                0.00    0.02       1/1           Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [17]
+                0.00    0.00       1/2           void clone<signed char const, signed char>(signed char*&, signed char const*, int) [54]
+                0.00    0.00       1/1           Cache::Cache(int, long) [62]
 -----------------------------------------------
-                0.00    0.00       1/1           svm_train [26]
-[41]     0.0    0.00    0.00       1         svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
-                0.00    0.00    6000/10158000     Kernel::kernel_rbf(int, int) const [28]
-                0.00    0.00       3/7           info(char const*, ...) [40]
-                0.00    0.00       1/1           Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [45]
-                0.00    0.00       1/1           Cache::Cache(int, long) [43]
-                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
-                0.00    0.00       1/1           Cache::~Cache() [44]
-                0.00    0.00       1/1           Kernel::~Kernel() [46]
+                0.00    0.02       1/1           SVC_Q::SVC_Q(svm_problem const&, svm_parameter const&, signed char const*) [16]
+[17]     0.0    0.00    0.02       1         Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [17]
+                0.02    0.00   32561/68356868     Kernel::dot(svm_node const*, svm_node const*) [9]
+                0.00    0.00       1/1           QMatrix::QMatrix() [69]
+                0.00    0.00       1/1           void clone<svm_node* const, svm_node const*>(svm_node const**&, svm_node* const*, int) [59]
 -----------------------------------------------
-                0.00    0.00       1/1           svm_train [26]
-[42]     0.0    0.00    0.00       1         readline(_IO_FILE*) [42]
+                0.01    0.00   39014/39014       Cache::get_data(int, float**, int) [19]
+[18]     0.0    0.01    0.00   39014         Cache::lru_insert(Cache::head_t*) [18]
 -----------------------------------------------
-                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
-[43]     0.0    0.00    0.00       1         Cache::Cache(int, long) [43]
+                0.00    0.01   39014/39014       SVC_Q::get_Q(int, int) const [20]
+[19]     0.0    0.00    0.01   39014         Cache::get_data(int, float**, int) [19]
+                0.01    0.00   39014/39014       Cache::lru_insert(Cache::head_t*) [18]
+                0.00    0.00   38217/38217       Cache::lru_delete(Cache::head_t*) [48]
+                0.00    0.00   14310/14312       void swap<int>(int&, int&) [49]
 -----------------------------------------------
-                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
-[44]     0.0    0.00    0.00       1         Cache::~Cache() [44]
+                0.00    0.00    8257/39014       Solver::select_working_set(int&, int&) [10]
+                0.00    0.01   30757/39014       Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[20]     0.0    0.00    0.01   39014         SVC_Q::get_Q(int, int) const [20]
+                0.00    0.01   39014/39014       Cache::get_data(int, float**, int) [19]
 -----------------------------------------------
-                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
-[45]     0.0    0.00    0.00       1         Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [45]
-                0.00    0.00    6000/10164000     Kernel::dot(svm_node const*, svm_node const*) [27]
+                0.01    0.00       1/1           svm_train [1]
+[21]     0.0    0.01    0.00       1         svm_group_classes(svm_problem const*, int*, int**, int**, int**, int*) [21]
+                0.00    0.00       2/14312       void swap<int>(int&, int&) [49]
 -----------------------------------------------
-                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
-[46]     0.0    0.00    0.00       1         Kernel::~Kernel() [46]
+                0.00    0.00       1/1           main [2]
+[22]     0.0    0.00    0.00       1         svm_check_parameter [22]
 -----------------------------------------------
-                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
-[47]     0.0    0.00    0.00       1         Solver::do_shrinking() [47]
-                0.00    0.00    6000/6000        Solver::be_shrunk(int, double, double) [34]
-                0.00    0.00     683/683         Solver::swap_index(int, int) [37]
+                0.00    0.00       1/1           main [2]
+[23]     0.0    0.00    0.00       1         svm_destroy_param [23]
 -----------------------------------------------
-                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
-[48]     0.0    0.00    0.00       1         Solver::calculate_rho() [48]
+                0.00    0.00       1/1           main [2]
+[24]     0.0    0.00    0.00       1         svm_free_and_destroy_model [24]
+                0.00    0.00       1/1           svm_free_model_content [25]
 -----------------------------------------------
-                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
-[49]     0.0    0.00    0.00       1         Solver::reconstruct_gradient() [49]
-                0.00    0.00     636/7892        SVC_Q::get_Q(int, int) const [32]
+                0.00    0.00       1/1           svm_free_and_destroy_model [24]
+[25]     0.0    0.00    0.00       1         svm_free_model_content [25]
 -----------------------------------------------
-                0.00    0.00       1/1           svm_train_one(svm_problem const*, svm_parameter const*, double, double) [41]
-[50]     0.0    0.00    0.00       1         Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
-                0.00    0.00    5316/7892        SVC_Q::get_Q(int, int) const [32]
-                0.00    0.00    1940/1940        Solver::select_working_set(int&, int&) [35]
-                0.00    0.00       3/7           info(char const*, ...) [40]
-                0.00    0.00       1/1           SVC_Q::get_QD() const [51]
-                0.00    0.00       1/1           Solver::do_shrinking() [47]
-                0.00    0.00       1/1           Solver::calculate_rho() [48]
-                0.00    0.00       1/1           Solver::reconstruct_gradient() [49]
+                0.00    0.00       1/1           main [2]
+[26]     0.0    0.00    0.00       1         svm_save_model [26]
 -----------------------------------------------
-                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [50]
-[51]     0.0    0.00    0.00       1         SVC_Q::get_QD() const [51]
+                0.00    0.00       1/1           parse_command_line(int, char**, char*, char*) [56]
+[27]     0.0    0.00    0.00       1         svm_set_print_string_function [27]
+-----------------------------------------------
+                0.00    0.00   16510/65581       Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+                0.00    0.00   49071/65581       Solver::update_alpha_status(int) [14]
+[46]     0.0    0.00    0.00   65581         Solver::get_C(int) [46]
+-----------------------------------------------
+                0.00    0.00   65123/65123       read_problem(char const*) [55]
+[47]     0.0    0.00    0.00   65123         readline(_IO_FILE*) [47]
+-----------------------------------------------
+                0.00    0.00   38217/38217       Cache::get_data(int, float**, int) [19]
+[48]     0.0    0.00    0.00   38217         Cache::lru_delete(Cache::head_t*) [48]
+-----------------------------------------------
+                0.00    0.00       2/14312       svm_group_classes(svm_problem const*, int*, int**, int**, int**, int*) [21]
+                0.00    0.00   14310/14312       Cache::get_data(int, float**, int) [19]
+[49]     0.0    0.00    0.00   14312         void swap<int>(int&, int&) [49]
+-----------------------------------------------
+                0.00    0.00    7786/7786        Solver::calculate_rho() [6]
+[50]     0.0    0.00    0.00    7786         double min<double>(double, double) [50]
+-----------------------------------------------
+                0.00    0.00      14/14          info(char const*, ...) [52]
+[51]     0.0    0.00    0.00      14         print_string_stdout(char const*) [51]
+-----------------------------------------------
+                0.00    0.00       1/14          solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double) [3]
+                0.00    0.00       1/14          svm_train [1]
+                0.00    0.00       2/14          svm_train_one(svm_problem const*, svm_parameter const*, double, double) [4]
+                0.00    0.00      10/14          Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[52]     0.0    0.00    0.00      14         info(char const*, ...) [52]
+                0.00    0.00      14/14          print_string_stdout(char const*) [51]
+-----------------------------------------------
+                0.00    0.00       9/9           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[53]     0.0    0.00    0.00       9         int min<int>(int, int) [53]
+-----------------------------------------------
+                0.00    0.00       1/2           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+                0.00    0.00       1/2           SVC_Q::SVC_Q(svm_problem const&, svm_parameter const&, signed char const*) [16]
+[54]     0.0    0.00    0.00       2         void clone<signed char const, signed char>(signed char*&, signed char const*, int) [54]
+-----------------------------------------------
+                0.00    0.00       1/1           main [2]
+[55]     0.0    0.00    0.00       1         read_problem(char const*) [55]
+                0.00    0.00   65123/65123       readline(_IO_FILE*) [47]
+-----------------------------------------------
+                0.00    0.00       1/1           main [2]
+[56]     0.0    0.00    0.00       1         parse_command_line(int, char**, char*, char*) [56]
+                0.00    0.00       1/1           svm_set_print_string_function [27]
+-----------------------------------------------
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[57]     0.0    0.00    0.00       1         int max<int>(int, int) [57]
+-----------------------------------------------
+                0.00    0.00       1/1           Cache::Cache(int, long) [62]
+[58]     0.0    0.00    0.00       1         long max<long>(long, long) [58]
+-----------------------------------------------
+                0.00    0.00       1/1           Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [17]
+[59]     0.0    0.00    0.00       1         void clone<svm_node* const, svm_node const*>(svm_node const**&, svm_node* const*, int) [59]
+-----------------------------------------------
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[60]     0.0    0.00    0.00       1         void clone<double const, double>(double*&, double const*, int) [60]
+-----------------------------------------------
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[61]     0.0    0.00    0.00       1         void clone<double, double>(double*&, double*, int) [61]
+-----------------------------------------------
+                0.00    0.00       1/1           SVC_Q::SVC_Q(svm_problem const&, svm_parameter const&, signed char const*) [16]
+[62]     0.0    0.00    0.00       1         Cache::Cache(int, long) [62]
+                0.00    0.00       1/1           long max<long>(long, long) [58]
+-----------------------------------------------
+                0.00    0.00       1/1           SVC_Q::~SVC_Q() [64]
+[63]     0.0    0.00    0.00       1         Cache::~Cache() [63]
+-----------------------------------------------
+                0.00    0.00       1/1           solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double) [3]
+[64]     0.0    0.00    0.00       1         SVC_Q::~SVC_Q() [64]
+                0.00    0.00       1/1           Cache::~Cache() [63]
+                0.00    0.00       1/1           Kernel::~Kernel() [65]
+-----------------------------------------------
+                0.00    0.00       1/1           SVC_Q::~SVC_Q() [64]
+[65]     0.0    0.00    0.00       1         Kernel::~Kernel() [65]
+                0.00    0.00       1/1           QMatrix::~QMatrix() [70]
+-----------------------------------------------
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[66]     0.0    0.00    0.00       1         Solver::reconstruct_gradient() [66]
+-----------------------------------------------
+                0.00    0.00       1/1           solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double) [3]
+[67]     0.0    0.00    0.00       1         Solver::Solver() [67]
+-----------------------------------------------
+                0.00    0.00       1/1           solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double) [3]
+[68]     0.0    0.00    0.00       1         Solver::~Solver() [68]
+-----------------------------------------------
+                0.00    0.00       1/1           Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [17]
+[69]     0.0    0.00    0.00       1         QMatrix::QMatrix() [69]
+-----------------------------------------------
+                0.00    0.00       1/1           Kernel::~Kernel() [65]
+[70]     0.0    0.00    0.00       1         QMatrix::~QMatrix() [70]
+-----------------------------------------------
+                0.00    0.00       1/1           Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int) [5]
+[71]     0.0    0.00    0.00       1         SVC_Q::get_QD() const [71]
 -----------------------------------------------
 
  This table describes the call tree of the program, and was sorted by
@@ -280,12 +419,21 @@ notice and this notice are preserved.
 
 Index by function name
 
-  [41] svm_train_one(svm_problem const*, svm_parameter const*, double, double) (svm.cpp) [43] Cache::Cache(int, long) [49] Solver::reconstruct_gradient()
-  [39] print_string_stdout(char const*) (svm.cpp) [44] Cache::~Cache() [50] Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int)
-  [40] info(char const*, ...) (svm.cpp) [27] Kernel::dot(svm_node const*, svm_node const*) [34] Solver::be_shrunk(int, double, double)
-  [29] readline(_IO_FILE*) (svm-train.c) [45] Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [38] SVC_Q::swap_index(int, int) const
-  [42] readline(_IO_FILE*) (svm.cpp) [46] Kernel::~Kernel() [32] SVC_Q::get_Q(int, int) const
-  [33] Cache::lru_delete(Cache::head_t*) [37] Solver::swap_index(int, int) [51] SVC_Q::get_QD() const
-  [30] Cache::lru_insert(Cache::head_t*) [47] Solver::do_shrinking() [28] Kernel::kernel_rbf(int, int) const
-  [36] Cache::swap_index(int, int) [48] Solver::calculate_rho() [1] svm_free_model_content
-  [31] Cache::get_data(int, float**, int) [35] Solver::select_working_set(int&, int&) [2] svm_set_print_string_function
+  [55] read_problem(char const*) [48] Cache::lru_delete(Cache::head_t*) [46] Solver::get_C(int)
+  [56] parse_command_line(int, char**, char*, char*) [18] Cache::lru_insert(Cache::head_t*) [67] Solver::Solver()
+   [7] double max<double>(double, double) (svm.cpp) [19] Cache::get_data(int, float**, int) [68] Solver::~Solver()
+  [57] int max<int>(int, int) (svm.cpp) [62] Cache::Cache(int, long) [69] QMatrix::QMatrix()
+  [58] long max<long>(long, long) (svm.cpp) [63] Cache::~Cache() [70] QMatrix::~QMatrix()
+  [50] double min<double>(double, double) (svm.cpp) [16] SVC_Q::SVC_Q(svm_problem const&, svm_parameter const&, signed char const*) [20] SVC_Q::get_Q(int, int) const
+  [53] int min<int>(int, int) (svm.cpp) [64] SVC_Q::~SVC_Q() [71] SVC_Q::get_QD() const
+  [49] void swap<int>(int&, int&) (svm.cpp) [9] Kernel::dot(svm_node const*, svm_node const*) [8] Kernel::kernel_rbf(int, int) const
+  [59] void clone<svm_node* const, svm_node const*>(svm_node const**&, svm_node* const*, int) (svm.cpp) [17] Kernel::Kernel(int, svm_node* const*, svm_parameter const&) [15] Kernel::swap_index(int, int) const
+  [54] void clone<signed char const, signed char>(signed char*&, signed char const*, int) (svm.cpp) [13] Kernel::~Kernel() [22] svm_check_parameter
+  [60] void clone<double const, double>(double*&, double const*, int) (svm.cpp) [65] Kernel::~Kernel() [23] svm_destroy_param
+  [61] void clone<double, double>(double*&, double*, int) (svm.cpp) [6] Solver::calculate_rho() [24] svm_free_and_destroy_model
+   [3] solve_c_svc(svm_problem const*, svm_parameter const*, double*, Solver::SolutionInfo*, double, double) (svm.cpp) [12] Solver::is_lower_bound(int) [25] svm_free_model_content
+   [4] svm_train_one(svm_problem const*, svm_parameter const*, double, double) (svm.cpp) [11] Solver::is_upper_bound(int) [26] svm_save_model
+  [21] svm_group_classes(svm_problem const*, int*, int**, int**, int**, int*) (svm.cpp) [10] Solver::select_working_set(int&, int&) [27] svm_set_print_string_function
+  [51] print_string_stdout(char const*) (svm.cpp) [14] Solver::update_alpha_status(int) [1] svm_train
+  [52] info(char const*, ...) (svm.cpp) [66] Solver::reconstruct_gradient()
+  [47] readline(_IO_FILE*) (svm-train.c) [5] Solver::Solve(int, QMatrix const&, double const*, signed char const*, double*, double, double, double, Solver::SolutionInfo*, int)
