@@ -5,6 +5,7 @@
 #include <errno.h>
 #include "svm.h"
 #include <omp.h>
+#include "helper.h"
 #define Malloc(type,n) (type *)malloc((n)*sizeof(type))
 
 void print_null(const char *s) {}
@@ -87,9 +88,6 @@ int main(int argc, char **argv)
 	char model_file_name[1024];
 	const char *error_msg;
 
-    double start; 
-    double end; 
-
 	parse_command_line(argc, argv, input_file_name, model_file_name);
 	read_problem(input_file_name);
 	error_msg = svm_check_parameter(&prob,&param);
@@ -106,11 +104,10 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-    start = omp_get_wtime(); 
-	model = svm_train(&prob,&param);
-	end = omp_get_wtime(); 
-    printf("Work took %f seconds, with %d threads.\n", end - start, omp_get_max_threads());
-	if(svm_save_model(model_file_name,model))
+		BEGIN_HOOK(WORK);
+		model = svm_train(&prob,&param);
+		END_HOOK(WORK);
+		if(svm_save_model(model_file_name,model))
 		{
 			fprintf(stderr, "can't save model to file %s\n", model_file_name);
 			exit(1);
