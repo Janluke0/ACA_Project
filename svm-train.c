@@ -84,6 +84,7 @@ static char* readline(FILE *input)
 
 int main(int argc, char **argv)
 {
+	BEGIN_HOOK(main);
 	char input_file_name[1024];
 	char model_file_name[1024];
 	const char *error_msg;
@@ -104,9 +105,9 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		BEGIN_HOOK(WORK);
+		BEGIN_HOOK(training);
 		model = svm_train(&prob,&param);
-		END_HOOK(WORK);
+		END_HOOK(training);
 		if(svm_save_model(model_file_name,model))
 		{
 			fprintf(stderr, "can't save model to file %s\n", model_file_name);
@@ -119,7 +120,7 @@ int main(int argc, char **argv)
 	free(prob.x);
 	free(x_space);
 	free(line);
-
+	END_HOOK(main);
 	return 0;
 }
 
