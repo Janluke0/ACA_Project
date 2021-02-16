@@ -1,6 +1,15 @@
-DBG = -ggdb -pg
+DBG =
+ifeq ($(IS_DBG),1)
+	DBG = -ggdb -pg
+endif
+
 CXX ?= g++ $(DBG)
-CFLAGS = $(DBG) -fopenmp -Wall -Wconversion -O0 -fPIC
+CFLAGS = $(DBG)
+ifeq ($(OMP),1)
+	CFLAGS += -fopenmp
+endif
+
+CFLAGS += -Wall -Wconversion -O$(OPT) -fPIC
 SHVER = 2
 OS = $(shell uname)
 
