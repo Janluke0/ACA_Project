@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <locale.h>
 #include "svm.h"
+#include "helper.h"
 int libsvm_version = LIBSVM_VERSION;
 typedef float Qfloat;
 typedef signed char schar;
@@ -1283,9 +1284,13 @@ public:
 		int start, j;
 		if((start = cache->get_data(i,&data,len)) < len)
 		{
-			#pragma omp parallel for private(j)
+			int size = len - start;
+			BEGIN_HOOK(GET_Q);
+//Q_ij = y_i*y_j*K(x_i,x_j)
+#pragma omp parallel for private(j) schedule(static)
 			for(j=start;j<len;j++)
 				data[j] = (Qfloat)(y[i]*y[j]*(this->*kernel_function)(i,j));
+			END_HOOK(GET_Q);
 		}
 		return data;
 	}
