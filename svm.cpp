@@ -508,7 +508,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 {
 	this->l = l;
 	this->Q = &Q;
-	QD=Q.get_QD();
+	QD = Q.get_QD(); // the diagonal of Q matrix
 	clone(p, p_,l);
 	clone(y, y_,l);
 	clone(alpha,alpha_,l);
@@ -539,12 +539,14 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		int i;
 		for(i=0;i<l;i++)
 		{
-			G[i] = p[i];
-			G_bar[i] = 0;
+			G[i] = p[i];  //memcpy ?
+			G_bar[i] = 0; //memset ?
 		}
+		//possible candidate for parallelization?
 		for(i=0;i<l;i++)
 			if(!is_lower_bound(i))
 			{
+				//get the i-th column of Q
 				const Qfloat *Q_i = Q.get_Q(i,l);
 				double alpha_i = alpha[i];
 				int j;
@@ -691,7 +693,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 
 		double delta_alpha_i = alpha[i] - old_alpha_i;
 		double delta_alpha_j = alpha[j] - old_alpha_j;
-
+		//CANDIDATE
 		for(int k=0;k<active_size;k++)
 		{
 			G[k] += Q_i[k]*delta_alpha_i + Q_j[k]*delta_alpha_j;
@@ -749,6 +751,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	{
 		double v = 0;
 		int i;
+		//CANDIDATE
 		for(i=0;i<l;i++)
 			v += alpha[i] * (G[i] + p[i]);
 
@@ -822,8 +825,8 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	const Qfloat *Q_i = NULL;
 	if(i != -1) // NULL Q_i not accessed: Gmax=-INF if i=-1
 		Q_i = Q->get_Q(i,active_size);
-	
-    for(int j=0;j<active_size;j++)
+	//#pragma omp parallel for
+	for(int j=0;j<active_size;j++)
 	{
 		if(y[j]==+1)
 		{
@@ -840,7 +843,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 						obj_diff = -(grad_diff*grad_diff)/quad_coef;
 					else
 						obj_diff = -(grad_diff*grad_diff)/TAU;
-
+					//#pragma omp critical
 					if (obj_diff <= obj_diff_min)
 					{
 						Gmin_idx=j;
@@ -864,7 +867,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 						obj_diff = -(grad_diff*grad_diff)/quad_coef;
 					else
 						obj_diff = -(grad_diff*grad_diff)/TAU;
-
+					//#pragma omp critical
 					if (obj_diff <= obj_diff_min)
 					{
 						Gmin_idx=j;
@@ -1273,7 +1276,7 @@ public:
 		clone(y,y_,prob.l);
 		cache = new Cache(prob.l,(long int)(param.cache_size*(1<<20)));
 		QD = new double[prob.l];
-        #pragma omp parallel for 
+		//#pragma omp parallel for shared(QD) schedule(dynamic)
 		for(int i=0;i<prob.l;i++)
 			QD[i] = (this->*kernel_function)(i,i);
 	}
@@ -1328,7 +1331,7 @@ public:
 	{
 		cache = new Cache(prob.l,(long int)(param.cache_size*(1<<20)));
 		QD = new double[prob.l];
-        #pragma omp parallel for 
+		//#pragma omp parallel for
 		for(int i=0;i<prob.l;i++)
 			QD[i] = (this->*kernel_function)(i,i);
 	}
@@ -1339,7 +1342,7 @@ public:
 		int start, j;
 		if((start = cache->get_data(i,&data,len)) < len)
 		{
-			#pragma omp parallel for private(j)
+			//#pragma omp parallel for private(j)
 			for(j=start;j<len;j++)
 				data[j] = (Qfloat)(this->*kernel_function)(i,j);
 		}
@@ -1445,7 +1448,9 @@ private:
 
 //
 // construct and solve various formulations
-//
+//	//see chp.6 of libsvm paper
+// Cp: C positive
+// Cn: C negative
 static void solve_c_svc(
 	const svm_problem *prob, const svm_parameter* param,
 	double *alpha, Solver::SolutionInfo* si, double Cp, double Cn)
@@ -1456,10 +1461,13 @@ static void solve_c_svc(
 
 	int i;
 
+	//for each sample
 	for(i=0;i<l;i++)
 	{
+		// initialize alpha and minuse_ones -> memset?
 		alpha[i] = 0;
 		minus_ones[i] = -1;
+		//	labels: {0,1}=>{-1,+1}
 		if(prob->y[i] > 0) y[i] = +1; else y[i] = -1;
 	}
 
@@ -1468,8 +1476,8 @@ static void solve_c_svc(
 		alpha, Cp, Cn, param->eps, si, param->shrinking);
 
 	double sum_alpha=0;
-    #pragma omp parallel for reduction(+: sum_alpha)
-    for(i=0;i<l;i++)
+	//the result is used only if Cp==Cn, move it inside if?
+	for(i=0;i<l;i++)
 		sum_alpha += alpha[i];
 
 	if (Cp==Cn)
@@ -2188,6 +2196,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 		// train k*(k-1)/2 models
 
 		bool *nonzero = Malloc(bool,l);
+		//memset(nonzero, false, l);
 		for(i=0;i<l;i++)
 			nonzero[i] = false;
 		decision_function *f = Malloc(decision_function,nr_class*(nr_class-1)/2);
@@ -2201,6 +2210,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 
 		int p = 0;
 		for(i=0;i<nr_class;i++)
+			//BEGIN_HOOK(for_inside_svm_train);
 			for(int j=i+1;j<nr_class;j++)
 			{
 				svm_problem sub_prob;
@@ -2235,7 +2245,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 				free(sub_prob.y);
 				++p;
 			}
-
+		//END_HOOK(for_inside_svm_train);
 		// build output
 
 		model->nr_class = nr_class;
@@ -2517,7 +2527,9 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 	{
 		double *sv_coef = model->sv_coef[0];
 		double sum = 0;
-		#pragma omp parallel for private(i)
+
+		//#pragma omp parallel for private(i) reduction(+ \
+//											  : sum) schedule(guided)
 		for(i=0;i<model->l;i++)
 			sum += sv_coef[i] * Kernel::k_function(x,model->SV[i],model->param);
 		sum -= model->rho[0];
@@ -2534,6 +2546,7 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 		int l = model->l;
 
 		double *kvalue = Malloc(double,l);
+		//#pragma omp parallel for private(i) schedule(auto)
 		for(i=0;i<l;i++)
 			kvalue[i] = Kernel::k_function(x,model->SV[i],model->param);
 
@@ -2543,6 +2556,7 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 			start[i] = start[i-1]+model->nSV[i-1];
 
 		int *vote = Malloc(int,nr_class);
+		//memset(vote, 0, nr_class);//should be faster than iterate and assign 0
 		for(i=0;i<nr_class;i++)
 			vote[i] = 0;
 
@@ -2559,8 +2573,13 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 				int k;
 				double *coef1 = model->sv_coef[j-1];
 				double *coef2 = model->sv_coef[i];
+				//#pragma omp parallel for private(k) reduction(+ \
+//											  : sum)
 				for(k=0;k<ci;k++)
 					sum += coef1[si+k] * kvalue[si+k];
+
+				//#pragma omp parallel for private(k) reduction(+ \
+//											  : sum)
 				for(k=0;k<cj;k++)
 					sum += coef2[sj+k] * kvalue[sj+k];
 				sum -= model->rho[p];

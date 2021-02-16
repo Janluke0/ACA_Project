@@ -17,8 +17,8 @@ struct svm_node
 
 struct svm_problem
 {
-	int l;
-	double *y;
+	int l;	   // # of samples
+	double *y; // sample labels
 	struct svm_node **x;
 };
 
