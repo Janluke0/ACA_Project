@@ -848,8 +848,6 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	if(i != -1) // NULL Q_i not accessed: Gmax=-INF if i=-1
 		Q_i = Q->get_Q(i,active_size);
 
-	printf("BEFORE: GMAX2 %f, GMAX %f, GMIN_IDX %d, DIFF:%f\n", Gmax, Gmax2, Gmin_idx, obj_diff_min);
-
 	int nthr = omp_get_max_threads();
 	double *obj_diff_min_s = Malloc(double, nthr + 1),
 		   *Gmax2_s = Malloc(double, nthr + 1);
@@ -861,13 +859,8 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	memset(Gmax2_s, Gmax2, sizeof(double) * nthr);
 	memset(Gmin_idx_s, Gmin_idx, sizeof(int) * nthr);
 
-	printf("DIFF_MIN = ");
-	for (int k = 0; k < nthr; k++)
-		printf("%lf ", obj_diff_min_s[k]);
-
-	puts("\n");
 	BEGIN_HOOK(FOR_B);
-#pragma omp parallel for //num_threads(1) //shared(Gmax, Gmax2, Gmin_idx, obj_diff_min)
+#pragma omp parallel for
 	for(int j=0;j<active_size;j++)
 	{
 		int id = omp_get_thread_num();
@@ -876,7 +869,6 @@ int Solver::select_working_set(int &out_i, int &out_j)
 			if (!is_lower_bound(j))
 			{
 				double grad_diff;
-				//#pragma omp critical(A)
 				{
 					grad_diff = Gmax + G[j];
 					if (G[j] >= Gmax2_s[id])
@@ -889,8 +881,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 					if (quad_coef > 0)
 						obj_diff = -(grad_diff*grad_diff)/quad_coef;
 					else
-						obj_diff = -(grad_diff*grad_diff)/TAU;
-					//#pragma omp critical(B)
+						obj_diff = -(grad_diff * grad_diff) / TAU;
 					if (obj_diff <= obj_diff_min_s[id])
 					{
 						Gmin_idx_s[id] = j;
@@ -904,7 +895,6 @@ int Solver::select_working_set(int &out_i, int &out_j)
 			if (!is_upper_bound(j))
 			{
 				double grad_diff;
-				//#pragma omp critical(A)
 				{
 					grad_diff = Gmax - G[j];
 					if (-G[j] >= Gmax2_s[id])
@@ -917,8 +907,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 					if (quad_coef > 0)
 						obj_diff = -(grad_diff*grad_diff)/quad_coef;
 					else
-						obj_diff = -(grad_diff*grad_diff)/TAU;
-					//#pragma omp critical(B)
+						obj_diff = -(grad_diff * grad_diff) / TAU;
 					if (obj_diff <= obj_diff_min_s[id])
 					{
 						Gmin_idx_s[id] = j;
@@ -929,17 +918,6 @@ int Solver::select_working_set(int &out_i, int &out_j)
 		}
 	}
 	END_HOOK(FOR_B);
-	printf("GMAX2 = ");
-	for (int k = 0; k < nthr; k++)
-		printf("%f ", Gmax2_s[k]);
-
-	puts("\n");
-
-	printf("DIFF_MIN = ");
-	for (int k = 0; k < nthr; k++)
-		printf("%f ", obj_diff_min_s[k]);
-
-	puts("\n");
 
 	for (int k = 0; k < nthr; k++)
 	{
@@ -951,8 +929,10 @@ int Solver::select_working_set(int &out_i, int &out_j)
 			obj_diff_min = obj_diff_min_s[k];
 		}
 	}
+	free(Gmax2_s);
+	free(obj_diff_min_s);
+	free(Gmin_idx_s);
 
-	printf("GMAX2 %f, GMAX %f, GMIN_IDX %d, DIFF:%f\n", Gmax, Gmax2, Gmin_idx, obj_diff_min);
 	if(Gmax+Gmax2 < eps || Gmin_idx == -1)
 		return 1;
 
