@@ -16,8 +16,8 @@ inline double __get_time()
 #include <omp.h>
 #endif
 
-#define BEGIN_HOOK(NAME) double NAME_hook_start = omp_get_wtime();
+#define BEGIN_HOOK(NAME) double hook_start_##NAME = omp_get_wtime();
 #define END_HOOK(NAME) printf("HOOK: %s requires %f seconds with %d max # of threads\n", \
                               #NAME,                                                     \
-                              omp_get_wtime() - NAME_hook_start,                         \
+                              omp_get_wtime() - hook_start_##NAME,                       \
                               omp_get_max_threads());
