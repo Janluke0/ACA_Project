@@ -821,34 +821,61 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	int Gmax_idx = -1;
 	int Gmin_idx = -1;
 	double obj_diff_min = INF;
+
+	//
+
+	int nthr = omp_get_max_threads();
+
 	BEGIN_HOOK(FOR_A);
+	double *Gmax_s = Malloc(double, nthr + 1);
+	int *Gmax_idx_s = Malloc(int, nthr + 1);
+
+	for (int k = 0; k < nthr; k++)
+		Gmax_s[k] = Gmax;
+	memset(Gmax_idx_s, Gmax_idx, sizeof(int) * nthr);
+
+#pragma omp parallel for
 	for(int t=0;t<active_size;t++)
+	{
+		int id = omp_get_thread_num();
 		if(y[t]==+1)
 		{
 			if(!is_upper_bound(t))
-				if(-G[t] >= Gmax)
+				if (-G[t] >= Gmax_s[id])
 				{
-					Gmax = -G[t];
-					Gmax_idx = t;
+					Gmax_s[id] = -G[t];
+					Gmax_idx_s[id] = t;
 				}
 		}
 		else
 		{
 			if(!is_lower_bound(t))
-				if(G[t] >= Gmax)
+				if (G[t] >= Gmax_s[id])
 				{
-					Gmax = G[t];
-					Gmax_idx = t;
+					Gmax_s[id] = G[t];
+					Gmax_idx_s[id] = t;
 				}
 		}
+	}
+
+	for (int k = 0; k < nthr; k++)
+		if (Gmax_s[k] >= Gmax)
+		{
+			Gmax = Gmax_s[k];
+			Gmax_idx = Gmax_idx_s[k];
+		}
+	free(Gmax_s);
+	free(Gmax_idx_s);
 	END_HOOK(FOR_A);
 
 	int i = Gmax_idx;
 	const Qfloat *Q_i = NULL;
-	if(i != -1) // NULL Q_i not accessed: Gmax=-INF if i=-1
-		Q_i = Q->get_Q(i,active_size);
+	if (i != -1) // NULL Q_i not accessed: Gmax=-INF if i=-1
+		Q_i = Q->get_Q(i, active_size);
 
-	int nthr = omp_get_max_threads();
+	///
+
+	BEGIN_HOOK(FOR_B);
 	double *obj_diff_min_s = Malloc(double, nthr + 1),
 		   *Gmax2_s = Malloc(double, nthr + 1);
 	int *Gmin_idx_s = Malloc(int, nthr + 1);
@@ -859,7 +886,6 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	memset(Gmax2_s, Gmax2, sizeof(double) * nthr);
 	memset(Gmin_idx_s, Gmin_idx, sizeof(int) * nthr);
 
-	BEGIN_HOOK(FOR_B);
 #pragma omp parallel for
 	for(int j=0;j<active_size;j++)
 	{
@@ -917,7 +943,6 @@ int Solver::select_working_set(int &out_i, int &out_j)
 			}
 		}
 	}
-	END_HOOK(FOR_B);
 
 	for (int k = 0; k < nthr; k++)
 	{
@@ -932,6 +957,9 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	free(Gmax2_s);
 	free(obj_diff_min_s);
 	free(Gmin_idx_s);
+	END_HOOK(FOR_B);
+
+	///
 
 	if(Gmax+Gmax2 < eps || Gmin_idx == -1)
 		return 1;
@@ -939,7 +967,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	out_i = Gmax_idx;
 	out_j = Gmin_idx;
 	return 0;
-}
+	}
 
 bool Solver::be_shrunk(int i, double Gmax1, double Gmax2)
 {
