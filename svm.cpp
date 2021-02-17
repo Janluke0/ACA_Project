@@ -705,6 +705,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		double delta_alpha_j = alpha[j] - old_alpha_j;
 		//CANDIDATE
 		BEGIN_HOOK(FOR_G);
+#pragma omp parallel for
 		for(int k=0;k<active_size;k++)
 		{
 			G[k] += Q_i[k]*delta_alpha_i + Q_j[k]*delta_alpha_j;
@@ -719,29 +720,35 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			update_alpha_status(i);
 			update_alpha_status(j);
 			int k;
+
 			if(ui != is_upper_bound(i))
 			{
 				Q_i = Q.get_Q(i,l);
+				BEGIN_HOOK(FOR_H_1);
 				if(ui)
+#pragma omp parallel for
 					for(k=0;k<l;k++)
 						G_bar[k] -= C_i * Q_i[k];
 				else
+#pragma omp parallel for
 					for(k=0;k<l;k++)
 						G_bar[k] += C_i * Q_i[k];
+				END_HOOK(FOR_H_1);
 			}
 
 			if(uj != is_upper_bound(j))
 			{
 				Q_j = Q.get_Q(j,l);
-
-				BEGIN_HOOK(FOR_H);
+				BEGIN_HOOK(FOR_H_2);
 				if(uj)
+#pragma omp parallel for
 					for(k=0;k<l;k++)
 						G_bar[k] -= C_j * Q_j[k];
 				else
+#pragma omp parallel for
 					for(k=0;k<l;k++)
 						G_bar[k] += C_j * Q_j[k];
-				END_HOOK(FOR_H);
+				END_HOOK(FOR_H_2);
 			}
 		}
 
@@ -769,21 +776,22 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		double v = 0;
 		int i;
 		//CANDIDATE
-
-		BEGIN_HOOK(FOR_I);
+		//called only one time
+		//BEGIN_HOOK(FOR_I);
 		for(i=0;i<l;i++)
 			v += alpha[i] * (G[i] + p[i]);
-		END_HOOK(FOR_I);
+		//END_HOOK(FOR_I);
 		si->obj = v/2;
 	}
 
 	// put back the solution
-	BEGIN_HOOK(FOR_J);
+	//called only one time
+	//BEGIN_HOOK(FOR_J);
 	{
 		for(int i=0;i<l;i++)
 			alpha_[active_set[i]] = alpha[i];
 	}
-	END_HOOK(FOR_J);
+	//END_HOOK(FOR_J);
 
 	// juggle everything back
 	/*{
