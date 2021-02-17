@@ -520,15 +520,19 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	// initialize alpha_status
 	{
 		alpha_status = new char[l];
+		BEGIN_HOOK(FOR_C);
 		for(int i=0;i<l;i++)
 			update_alpha_status(i);
+		END_HOOK(FOR_C);
 	}
 
 	// initialize active set (for shrinking)
 	{
 		active_set = new int[l];
+		BEGIN_HOOK(FOR_D);
 		for(int i=0;i<l;i++)
 			active_set[i] = i;
+		END_HOOK(FOR_D);
 		active_size = l;
 	}
 
@@ -537,12 +541,16 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		G = new double[l];
 		G_bar = new double[l];
 		int i;
+		BEGIN_HOOK(FOR_E);
 		for(i=0;i<l;i++)
 		{
 			G[i] = p[i];  //memcpy ?
 			G_bar[i] = 0; //memset ?
 		}
+		END_HOOK(FOR_E);
 		//possible candidate for parallelization?
+
+		BEGIN_HOOK(FOR_F);
 		for(i=0;i<l;i++)
 			if(!is_lower_bound(i))
 			{
@@ -556,6 +564,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 					for(j=0;j<l;j++)
 						G_bar[j] += get_C(i) * Q_i[j];
 			}
+		END_HOOK(FOR_F);
 	}
 
 	// optimization step
@@ -566,6 +575,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 
 	while(iter < max_iter)
 	{
+		BEGIN_HOOK(ITERATION);
 		// show progress and do shrinking
 
 		if(--counter == 0)
@@ -694,10 +704,12 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		double delta_alpha_i = alpha[i] - old_alpha_i;
 		double delta_alpha_j = alpha[j] - old_alpha_j;
 		//CANDIDATE
+		BEGIN_HOOK(FOR_G);
 		for(int k=0;k<active_size;k++)
 		{
 			G[k] += Q_i[k]*delta_alpha_i + Q_j[k]*delta_alpha_j;
 		}
+		END_HOOK(FOR_G);
 
 		// update alpha_status and G_bar
 
@@ -721,14 +733,19 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			if(uj != is_upper_bound(j))
 			{
 				Q_j = Q.get_Q(j,l);
+
+				BEGIN_HOOK(FOR_H);
 				if(uj)
 					for(k=0;k<l;k++)
 						G_bar[k] -= C_j * Q_j[k];
 				else
 					for(k=0;k<l;k++)
 						G_bar[k] += C_j * Q_j[k];
+				END_HOOK(FOR_H);
 			}
 		}
+
+		END_HOOK(ITERATION);
 	}
 
 	if(iter >= max_iter)
@@ -752,17 +769,21 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		double v = 0;
 		int i;
 		//CANDIDATE
+
+		BEGIN_HOOK(FOR_I);
 		for(i=0;i<l;i++)
 			v += alpha[i] * (G[i] + p[i]);
-
+		END_HOOK(FOR_I);
 		si->obj = v/2;
 	}
 
 	// put back the solution
+	BEGIN_HOOK(FOR_J);
 	{
 		for(int i=0;i<l;i++)
 			alpha_[active_set[i]] = alpha[i];
 	}
+	END_HOOK(FOR_J);
 
 	// juggle everything back
 	/*{
@@ -800,7 +821,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	int Gmax_idx = -1;
 	int Gmin_idx = -1;
 	double obj_diff_min = INF;
-
+	BEGIN_HOOK(FOR_A);
 	for(int t=0;t<active_size;t++)
 		if(y[t]==+1)
 		{
@@ -820,21 +841,28 @@ int Solver::select_working_set(int &out_i, int &out_j)
 					Gmax_idx = t;
 				}
 		}
+	END_HOOK(FOR_A);
 
 	int i = Gmax_idx;
 	const Qfloat *Q_i = NULL;
 	if(i != -1) // NULL Q_i not accessed: Gmax=-INF if i=-1
 		Q_i = Q->get_Q(i,active_size);
-	//#pragma omp parallel for
+
+	BEGIN_HOOK(FOR_B);
+	//#pragma omp parallel for shared(Gmax, Gmax2, Gmin_idx, obj_diff_min)
 	for(int j=0;j<active_size;j++)
 	{
 		if(y[j]==+1)
 		{
 			if (!is_lower_bound(j))
 			{
-				double grad_diff=Gmax+G[j];
-				if (G[j] >= Gmax2)
-					Gmax2 = G[j];
+				double grad_diff;
+				//#pragma omp critical(A)
+				{
+					grad_diff = Gmax + G[j];
+					if (G[j] >= Gmax2)
+						Gmax2 = G[j];
+				}
 				if (grad_diff > 0)
 				{
 					double obj_diff;
@@ -843,7 +871,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 						obj_diff = -(grad_diff*grad_diff)/quad_coef;
 					else
 						obj_diff = -(grad_diff*grad_diff)/TAU;
-					//#pragma omp critical
+					//#pragma omp critical(B)
 					if (obj_diff <= obj_diff_min)
 					{
 						Gmin_idx=j;
@@ -856,9 +884,13 @@ int Solver::select_working_set(int &out_i, int &out_j)
 		{
 			if (!is_upper_bound(j))
 			{
-				double grad_diff= Gmax-G[j];
-				if (-G[j] >= Gmax2)
-					Gmax2 = -G[j];
+				double grad_diff;
+				//#pragma omp critical(A)
+				{
+					grad_diff = Gmax - G[j];
+					if (-G[j] >= Gmax2)
+						Gmax2 = -G[j];
+				}
 				if (grad_diff > 0)
 				{
 					double obj_diff;
@@ -867,7 +899,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 						obj_diff = -(grad_diff*grad_diff)/quad_coef;
 					else
 						obj_diff = -(grad_diff*grad_diff)/TAU;
-					//#pragma omp critical
+					//#pragma omp critical(B)
 					if (obj_diff <= obj_diff_min)
 					{
 						Gmin_idx=j;
@@ -877,6 +909,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 			}
 		}
 	}
+	END_HOOK(FOR_B);
 
 	if(Gmax+Gmax2 < eps || Gmin_idx == -1)
 		return 1;
@@ -1277,8 +1310,10 @@ public:
 		cache = new Cache(prob.l,(long int)(param.cache_size*(1<<20)));
 		QD = new double[prob.l];
 		//#pragma omp parallel for shared(QD) schedule(dynamic)
+		BEGIN_HOOK(SVC_Q);
 		for(int i=0;i<prob.l;i++)
 			QD[i] = (this->*kernel_function)(i,i);
+		END_HOOK(SVC_Q);
 	}
 
 	Qfloat *get_Q(int i, int len) const
@@ -1290,7 +1325,7 @@ public:
 			int size = len - start;
 			BEGIN_HOOK(GET_Q);
 //Q_ij = y_i*y_j*K(x_i,x_j)
-#pragma omp parallel for private(j) schedule(static)
+#pragma omp parallel for private(j) schedule(dynamic)
 			for(j=start;j<len;j++)
 				data[j] = (Qfloat)(y[i]*y[j]*(this->*kernel_function)(i,j));
 			END_HOOK(GET_Q);
