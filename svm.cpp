@@ -1382,10 +1382,11 @@ public:
 		{
 			int size = len - start;
 			BEGIN_HOOK(GET_Q);
+			double y_i = y[i];
 //Q_ij = y_i*y_j*K(x_i,x_j)
-#pragma omp parallel for private(j) schedule(dynamic)
+#pragma omp parallel for private(j) schedule(static)
 			for(j=start;j<len;j++)
-				data[j] = (Qfloat)(y[i]*y[j]*(this->*kernel_function)(i,j));
+				data[j] = (Qfloat)(y_i * y[j] * (this->*kernel_function)(i, j));
 			END_HOOK(GET_Q);
 		}
 		return data;
