@@ -835,8 +835,8 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	int nthr = omp_get_max_threads();
 
 	BEGIN_HOOK(FOR_A);
-	double *Gmax_s = Malloc(double, nthr + 1);
-	int *Gmax_idx_s = Malloc(int, nthr + 1);
+	double *Gmax_s = Malloc(double, nthr);
+	int *Gmax_idx_s = Malloc(int, nthr);
 
 	for (int k = 0; k < nthr; k++)
 		Gmax_s[k] = Gmax;
@@ -968,6 +968,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	END_HOOK(FOR_B);
 
 	///
+	printf("LOG %f,%f,%d", Gmax, Gmax2, Gmin_idx);
 
 	if(Gmax+Gmax2 < eps || Gmin_idx == -1)
 		return 1;
@@ -1369,6 +1370,7 @@ public:
 		QD = new double[prob.l];
 		//#pragma omp parallel for shared(QD) schedule(dynamic)
 		BEGIN_HOOK(SVC_Q);
+#pragma omp parallel for schedule(static)
 		for(int i=0;i<prob.l;i++)
 			QD[i] = (this->*kernel_function)(i,i);
 		END_HOOK(SVC_Q);
@@ -1380,7 +1382,6 @@ public:
 		int start, j;
 		if((start = cache->get_data(i,&data,len)) < len)
 		{
-			int size = len - start;
 			BEGIN_HOOK(GET_Q);
 			double y_i = y[i];
 //Q_ij = y_i*y_j*K(x_i,x_j)

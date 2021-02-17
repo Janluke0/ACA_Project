@@ -3,6 +3,7 @@
 #include <time.h>
 #define omp_get_wtime __get_time
 #define omp_get_max_threads() 1
+#define omp_get_thread_num() 0
 inline double __get_time()
 {
     struct timespec tmp;
