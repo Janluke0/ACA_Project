@@ -1350,6 +1350,7 @@ public:
 		if ((start = cache->get_data(i, &data, len)) < len)
 		{
 			BEGIN_HOOK(GET_Q);
+#pragma omp parallel for private(j) schedule(static)
 			for (j = start; j < len; j++)
 				data[j] = (Qfloat)(y[i] * y[j] * (this->*kernel_function)(i, j));
 			END_HOOK(GET_Q);
