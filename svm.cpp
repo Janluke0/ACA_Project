@@ -855,26 +855,46 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	double obj_diff_min = INF;
 
 	BEGIN_HOOK(FOR_A);
+	int nthr = omp_get_max_threads();
+	double *Gmax_s = Malloc(double, nthr);
+	int *Gmax_idx_s = Malloc(int, nthr);
+
+	for (int k = 0; k < nthr; k++)
+		Gmax_s[k] = Gmax;
+	memset(Gmax_idx_s, Gmax_idx, sizeof(int) * nthr);
+
+#pragma omp parallel for
 	for (int t = 0; t < active_size; t++)
+	{
+		int id = omp_get_thread_num();
 		if (y[t] == +1)
 		{
 			if (!is_upper_bound(t))
-				if (-G[t] >= Gmax)
+				if (-G[t] >= Gmax_s[id])
 				{
-					Gmax = -G[t];
-					Gmax_idx = t;
+					Gmax_s[id] = -G[t];
+					Gmax_idx_s[id] = t;
 				}
 		}
 		else
 		{
 			if (!is_lower_bound(t))
-				if (G[t] >= Gmax)
+				if (G[t] >= Gmax_s[id])
 				{
-					Gmax = G[t];
-					Gmax_idx = t;
+					Gmax_s[id] = G[t];
+					Gmax_idx_s[id] = t;
 				}
 		}
+	}
 
+	for (int k = 0; k < nthr; k++)
+		if (Gmax_s[k] >= Gmax)
+		{
+			Gmax = Gmax_s[k];
+			Gmax_idx = Gmax_idx_s[k];
+		}
+	free(Gmax_s);
+	free(Gmax_idx_s);
 	END_HOOK(FOR_A);
 
 	int i = Gmax_idx;
