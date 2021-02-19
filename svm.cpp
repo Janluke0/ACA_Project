@@ -1338,8 +1338,9 @@ public:
 	{
 		clone(y, y_, prob.l);
 		cache = new Cache(prob.l, (long int)(param.cache_size * (1 << 20)));
-		BEGIN_HOOK(SVC_Q);
 		QD = new double[prob.l];
+		BEGIN_HOOK(SVC_Q);
+#pragma omp parallel for schedule(dynamic, 500)
 		for (int i = 0; i < prob.l; i++)
 			QD[i] = (this->*kernel_function)(i, i);
 		END_HOOK(SVC_Q);
