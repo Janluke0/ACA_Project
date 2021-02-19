@@ -890,8 +890,10 @@ int Solver::select_working_set(int &out_i, int &out_j)
 
 	//memset(obj_diff_min_s, INF, sizeof(double) * nthr);
 	for (int k = 0; k < nthr; k++)
+	{
 		obj_diff_min_s[k] = obj_diff_min;
-	memset(Gmax2_s, Gmax2, sizeof(double) * nthr);
+		Gmax2_s[k] = Gmax2;
+	}
 	memset(Gmin_idx_s, Gmin_idx, sizeof(int) * nthr);
 
 #pragma omp parallel for
