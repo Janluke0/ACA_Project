@@ -76,9 +76,9 @@ def train_grid(dataset=[],nthreads=[],times=1):
 if __name__=="__main__":
     build(dbg=False,opt=2)
     N = 3
-    N_THR =[1]# range(1,13)
+    N_THR =[8]# range(1,13)
     r = train_grid(["a9a"],N_THR,N)
     for ds in r:
         for nt in r[ds]:
             for hook in r[ds][nt]:
-                print(nt,*r[ds][nt][hook])
+                print(ds,nt,hook,*r[ds][nt][hook])
