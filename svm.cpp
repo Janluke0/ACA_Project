@@ -743,6 +743,7 @@ void Solver::Solve(int l, const QMatrix &Q, const double *p_, const schar *y_,
 		double delta_alpha_j = alpha[j] - old_alpha_j;
 
 		BEGIN_HOOK(FOR_G);
+#pragma omp parallel for
 		for (int k = 0; k < active_size; k++)
 		{
 			G[k] += Q_i[k] * delta_alpha_i + Q_j[k] * delta_alpha_j;
