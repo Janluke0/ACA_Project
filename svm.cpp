@@ -760,9 +760,11 @@ void Solver::Solve(int l, const QMatrix &Q, const double *p_, const schar *y_,
 				Q_i = Q.get_Q(i, l);
 				BEGIN_HOOK(FOR_H_1);
 				if (ui)
+#pragma omp parallel for
 					for (k = 0; k < l; k++)
 						G_bar[k] -= C_i * Q_i[k];
 				else
+#pragma omp parallel for
 					for (k = 0; k < l; k++)
 						G_bar[k] += C_i * Q_i[k];
 				END_HOOK(FOR_H_1);
@@ -773,9 +775,11 @@ void Solver::Solve(int l, const QMatrix &Q, const double *p_, const schar *y_,
 				Q_j = Q.get_Q(j, l);
 				BEGIN_HOOK(FOR_H_2);
 				if (uj)
+#pragma omp parallel for
 					for (k = 0; k < l; k++)
 						G_bar[k] -= C_j * Q_j[k];
 				else
+#pragma omp parallel for
 					for (k = 0; k < l; k++)
 						G_bar[k] += C_j * Q_j[k];
 				END_HOOK(FOR_H_2);
