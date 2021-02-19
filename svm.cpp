@@ -905,7 +905,6 @@ int Solver::select_working_set(int &out_i, int &out_j)
 		Q_i = Q->get_Q(i, active_size);
 
 	BEGIN_HOOK(FOR_B);
-	int nthr = omp_get_max_threads();
 	double *obj_diff_min_s = Malloc(double, nthr),
 		   *Gmax2_s = Malloc(double, nthr);
 	int *Gmin_idx_s = Malloc(int, nthr);
