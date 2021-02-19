@@ -883,15 +883,31 @@ int Solver::select_working_set(int &out_i, int &out_j)
 		Q_i = Q->get_Q(i, active_size);
 
 	BEGIN_HOOK(FOR_B);
+	int nthr = omp_get_max_threads();
+	double *obj_diff_min_s = Malloc(double, nthr),
+		   *Gmax2_s = Malloc(double, nthr);
+	int *Gmin_idx_s = Malloc(int, nthr);
+
+	//memset(obj_diff_min_s, INF, sizeof(double) * nthr);
+	for (int k = 0; k < nthr; k++)
+		obj_diff_min_s[k] = obj_diff_min;
+	memset(Gmax2_s, Gmax2, sizeof(double) * nthr);
+	memset(Gmin_idx_s, Gmin_idx, sizeof(int) * nthr);
+
+#pragma omp parallel for
 	for (int j = 0; j < active_size; j++)
 	{
+		int id = omp_get_thread_num();
 		if (y[j] == +1)
 		{
 			if (!is_lower_bound(j))
 			{
-				double grad_diff = Gmax + G[j];
-				if (G[j] >= Gmax2)
-					Gmax2 = G[j];
+				double grad_diff;
+				{
+					grad_diff = Gmax + G[j];
+					if (G[j] >= Gmax2_s[id])
+						Gmax2_s[id] = G[j];
+				}
 				if (grad_diff > 0)
 				{
 					double obj_diff;
@@ -900,11 +916,10 @@ int Solver::select_working_set(int &out_i, int &out_j)
 						obj_diff = -(grad_diff * grad_diff) / quad_coef;
 					else
 						obj_diff = -(grad_diff * grad_diff) / TAU;
-
-					if (obj_diff <= obj_diff_min)
+					if (obj_diff <= obj_diff_min_s[id])
 					{
-						Gmin_idx = j;
-						obj_diff_min = obj_diff;
+						Gmin_idx_s[id] = j;
+						obj_diff_min_s[id] = obj_diff;
 					}
 				}
 			}
@@ -913,9 +928,12 @@ int Solver::select_working_set(int &out_i, int &out_j)
 		{
 			if (!is_upper_bound(j))
 			{
-				double grad_diff = Gmax - G[j];
-				if (-G[j] >= Gmax2)
-					Gmax2 = -G[j];
+				double grad_diff;
+				{
+					grad_diff = Gmax - G[j];
+					if (-G[j] >= Gmax2_s[id])
+						Gmax2_s[id] = -G[j];
+				}
 				if (grad_diff > 0)
 				{
 					double obj_diff;
@@ -924,16 +942,29 @@ int Solver::select_working_set(int &out_i, int &out_j)
 						obj_diff = -(grad_diff * grad_diff) / quad_coef;
 					else
 						obj_diff = -(grad_diff * grad_diff) / TAU;
-
-					if (obj_diff <= obj_diff_min)
+					if (obj_diff <= obj_diff_min_s[id])
 					{
-						Gmin_idx = j;
-						obj_diff_min = obj_diff;
+						Gmin_idx_s[id] = j;
+						obj_diff_min_s[id] = obj_diff;
 					}
 				}
 			}
 		}
 	}
+
+	for (int k = 0; k < nthr; k++)
+	{
+		if (Gmax2_s[k] >= Gmax2)
+			Gmax2 = Gmax2_s[k];
+		if (obj_diff_min_s[k] <= obj_diff_min)
+		{
+			Gmin_idx = Gmin_idx_s[k];
+			obj_diff_min = obj_diff_min_s[k];
+		}
+	}
+	free(Gmax2_s);
+	free(obj_diff_min_s);
+	free(Gmin_idx_s);
 	END_HOOK(FOR_B);
 
 	if (Gmax + Gmax2 < eps || Gmin_idx == -1)
