@@ -583,11 +583,8 @@ void Solver::Solve(int l, const QMatrix &Q, const double *p_, const schar *y_,
 		G_bar = new double[l];
 		int i;
 		BEGIN_HOOK(FOR_E);
-		for (i = 0; i < l; i++)
-		{
-			G[i] = p[i];
-			G_bar[i] = 0;
-		}
+		memcpy(G, p, l);
+		memset(G_bar, 0, l);
 		END_HOOK(FOR_E);
 		BEGIN_HOOK(FOR_F);
 		for (i = 0; i < l; i++)
