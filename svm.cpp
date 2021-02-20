@@ -1395,7 +1395,7 @@ public:
 
 		QD = new double[prob.l];
 		BEGIN_HOOK(SVC_Q);
-#pragma omp parallel for schedule(dynamic, 500)
+#pragma omp parallel for schedule(guided)
 		for (int i = 0; i < prob.l; i++)
 			QD[i] = (this->*kernel_function)(i, i);
 		END_HOOK(SVC_Q);
@@ -1407,9 +1407,9 @@ public:
 		int start, j;
 		if ((start = cache->get_data(i, &data, len)) < len)
 		{
-			BEGIN_HOOK(GET_Q);
 			schar y_i = y[i];
-#pragma omp parallel for private(j) schedule(dynamic, 500)
+			BEGIN_HOOK(GET_Q);
+#pragma omp parallel for private(j) schedule(guided)
 			for (j = start; j < len; j++)
 				data[j] = (Qfloat)(y_i * y[j] * (this->*kernel_function)(i, j));
 			END_HOOK(GET_Q);
