@@ -1340,7 +1340,7 @@ public:
 		cache = new Cache(prob.l, (long int)(param.cache_size * (1 << 20)));
 		QD = new double[prob.l];
 		BEGIN_HOOK(SVC_Q);
-#pragma omp parallel for schedule(dynamic, 500)
+#pragma omp parallel for schedule(guided)
 		for (int i = 0; i < prob.l; i++)
 			QD[i] = (this->*kernel_function)(i, i);
 		END_HOOK(SVC_Q);
