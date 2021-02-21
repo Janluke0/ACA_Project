@@ -9,7 +9,7 @@
 #include <locale.h>
 #include "svm.h"
 #include "helper.h"
-#define MAX_THREADS 6
+#define MAX_THREADS min(6, omp_get_max_threads())
 int libsvm_version = LIBSVM_VERSION;
 typedef float Qfloat;
 typedef signed char schar;
@@ -858,7 +858,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	double obj_diff_min = INF;
 
 	BEGIN_HOOK(FOR_A);
-	int nthr = min(MAX_THREADS, omp_get_max_threads());
+	int nthr = MAX_THREADS;
 	double *Gmax_s = Malloc(double, nthr);
 	int *Gmax_idx_s = Malloc(int, nthr);
 
