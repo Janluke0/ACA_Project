@@ -9,6 +9,7 @@
 #include <locale.h>
 #include "svm.h"
 #include "helper.h"
+#define MAX_THREADS 6
 int libsvm_version = LIBSVM_VERSION;
 typedef float Qfloat;
 typedef signed char schar;
@@ -740,7 +741,7 @@ void Solver::Solve(int l, const QMatrix &Q, const double *p_, const schar *y_,
 		double delta_alpha_j = alpha[j] - old_alpha_j;
 
 		BEGIN_HOOK(FOR_G);
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static, l / MAX_THREADS) num_threads(MAX_THREADS)
 		for (int k = 0; k < active_size; k++)
 		{
 			G[k] += Q_i[k] * delta_alpha_i + Q_j[k] * delta_alpha_j;
@@ -760,11 +761,11 @@ void Solver::Solve(int l, const QMatrix &Q, const double *p_, const schar *y_,
 				Q_i = Q.get_Q(i, l);
 				BEGIN_HOOK(FOR_H_1);
 				if (ui)
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static, l / MAX_THREADS) num_threads(MAX_THREADS)
 					for (k = 0; k < l; k++)
 						G_bar[k] -= C_i * Q_i[k];
 				else
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static, l / MAX_THREADS) num_threads(MAX_THREADS)
 					for (k = 0; k < l; k++)
 						G_bar[k] += C_i * Q_i[k];
 				END_HOOK(FOR_H_1);
@@ -775,11 +776,11 @@ void Solver::Solve(int l, const QMatrix &Q, const double *p_, const schar *y_,
 				Q_j = Q.get_Q(j, l);
 				BEGIN_HOOK(FOR_H_2);
 				if (uj)
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static, l / MAX_THREADS) num_threads(MAX_THREADS)
 					for (k = 0; k < l; k++)
 						G_bar[k] -= C_j * Q_j[k];
 				else
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static, l / MAX_THREADS) num_threads(MAX_THREADS)
 					for (k = 0; k < l; k++)
 						G_bar[k] += C_j * Q_j[k];
 				END_HOOK(FOR_H_2);
@@ -857,7 +858,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	double obj_diff_min = INF;
 
 	BEGIN_HOOK(FOR_A);
-	int nthr = omp_get_max_threads();
+	int nthr = min(MAX_THREADS, omp_get_max_threads());
 	double *Gmax_s = Malloc(double, nthr);
 	int *Gmax_idx_s = Malloc(int, nthr);
 
@@ -865,7 +866,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 		Gmax_s[k] = Gmax;
 	memset(Gmax_idx_s, Gmax_idx, sizeof(int) * nthr);
 
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static, l / MAX_THREADS) num_threads(MAX_THREADS)
 	for (int t = 0; t < active_size; t++)
 	{
 		int id = omp_get_thread_num();
@@ -917,7 +918,7 @@ int Solver::select_working_set(int &out_i, int &out_j)
 	}
 	memset(Gmin_idx_s, Gmin_idx, sizeof(int) * nthr);
 
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static, l / MAX_THREADS) num_threads(MAX_THREADS)
 	for (int j = 0; j < active_size; j++)
 	{
 		int id = omp_get_thread_num();
@@ -1395,7 +1396,7 @@ public:
 
 		QD = new double[prob.l];
 		BEGIN_HOOK(SVC_Q);
-#pragma omp parallel for schedule(guided)
+#pragma omp parallel for schedule(guided) num_threads(MAX_THREADS)
 		for (int i = 0; i < prob.l; i++)
 			QD[i] = (this->*kernel_function)(i, i);
 		END_HOOK(SVC_Q);
